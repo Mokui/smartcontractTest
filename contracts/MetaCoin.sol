@@ -48,6 +48,10 @@ contract MetaCoin {
     function allowance(address _owner, address _spender) public view returns (uint256 remaining) {
 		return allowed[_owner][_spender];
 	}
+	
+	function totalSupply() constant public returns (uint256 supply) {
+	    return total - balances[address(0)];
+	}
 
     uint256 public total;
 }
